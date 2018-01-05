@@ -135,7 +135,7 @@ dnf -y install cuda cuda-toolkit-9-0
 
 ```
 
-I found the following to be reproducible (this can be frought with dependecy version hell and is likley not perfect):
+I am using mostly negativo libraries, and found the following to be reproducible. This can be frought with minor cuda, nvidia dependecy version hell.
 
 ```
 -- enable both the repos above
@@ -152,7 +152,7 @@ dnf install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-fr
 dnf erase \*cuda\* \*nvidia\*
 reboot
 
--- type the following which will install dependent libraries from both repos
+-- type the following which will install dependent libraries from both repos  (nvidia-smi is from nvidia-driver-cuda rpm)
 nvidia-smi
 
 -- for posterity, here is my running system
@@ -239,9 +239,19 @@ Remove  42 Packages
 Freed space: 289 M
 Is this ok [y/N]: Operation aborted.
 
-
 ```
 
+`Note:` I keep all my rpm dependecies cached locally so i don't have to wait and use deltarpm, disk is cheap:
+
+```
+cat /etc/dnf/dnf.conf 
+[main]
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=True
+deltarpm=1
+keepcache=1
+```
 
 ### Docker and NVIDIA Docker
 
