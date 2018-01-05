@@ -264,7 +264,7 @@ systemctl restart docker
 ```
 #### Tests
 
-You can test CUDA and NVIDIA drivers are working in a container using tje nvidia/cuda image - the docker run commands should all be equivalent now:
+You can test CUDA and NVIDIA drivers are working in a container using the nvidia/cuda image - the docker run commands should all be equivalent now:
 
 ```
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
@@ -374,7 +374,7 @@ cd models/tutorials/image/imagenet
 python3 classify_image.py
 python3 classify_image.py --image_file='/home/mike/Pictures/hotdog2.jpg'
 ```
-![alt text](https://github.com/eformat/mlops-setup/images/hotdog2.jpg "Hotdog2")
+![alt text](images/hotdog2.jpg)
 
 Classification:
 
