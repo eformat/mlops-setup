@@ -409,7 +409,7 @@ https://www.tensorflow.org/tutorials/mandelbrot
 
 You should get something like this:
 
-![alt text](https://github.com/eformat/mlops-setup/images/jupyter-locally.png "jupyter-locally")
+![alt text](images/jupyter-locally.png)
 
 
 ### Minikube install
@@ -575,11 +575,11 @@ OR
 nvidia-smi pmon
 ```
 
-![alt text](https://github.com/eformat/mlops-setup/images/nvidia-smi.png "nvidia-smi")
+![alt text](images/nvidia-smi.png)
 
-![alt text](https://github.com/eformat/mlops-setup/images/mlops-kube-dash.png "kube-dash")
+![alt text](images/mlops-kube-dash.png)
 
-![alt text](https://github.com/eformat/mlops-setup/images/tensorflow-minikube.png "tensorflow-minikube")
+![alt text](images/tensorflow-minikube.png)
 
 
 You can also submit a training job by first generating a new job from a prototype using ksonnet:
