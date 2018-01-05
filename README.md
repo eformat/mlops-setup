@@ -88,7 +88,7 @@ https://github.com/kaueraal/run_scaled
 
 Joys, this is why Linus calls NVIDIA `“the single worst company”` ... 
 
-Anyway, i don't need my GPU for display graphics ;) Although, if i was a gamer - Bumblebee and `optirun` seemed to do most things. I ended up removing Bumblebee (see later for MLOPS work) as `optirun` command not easy to incorporate into various container images that i did not control.
+Anyway, i don't need my GPU for display graphics ;) Although, if i was a gamer - Bumblebee and `optirun` seemed to do most things. I ended up removing Bumblebee (see later for MLOPS work) as `optirun` command not easy to incorporate into various container images that i did not control plus it always caused minor version clashes with CUDA and NVIDIA libraries from the other repos.
 
 Further reading:
 
@@ -539,6 +539,13 @@ Install `minikube`
 ```
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 ```
+
+`Note:` i disabled the automatic starting of minikube which is part of install
+
+```
+systemctl disable localkube.service
+```
+
 
 On fedora, `selinux` and `firewalld` get in the way. 
 
