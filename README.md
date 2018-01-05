@@ -135,7 +135,7 @@ dnf -y install cuda cuda-toolkit-9-0
 
 ```
 
-I am using mostly negativo libraries, and found the following to be reproducible. This can be frought with minor cuda, nvidia dependecy version hell.
+I am using mostly negativo libraries, and found the following to be reproducible. This can be frought with minor cuda, nvidia dependecy version hell of course, but hey.
 
 ```
 -- enable both the repos above
@@ -155,29 +155,91 @@ reboot
 -- type the following which will install dependent libraries from both repos  (nvidia-smi is from nvidia-driver-cuda rpm)
 nvidia-smi
 
+-- reinstall cuda and toolkit
+rpm -i ~mike/Downloads/cuda-repo-fedora25-9.1.85-1.x86_64.rpm
+-- // NOTE latest is 9-1 but this wont work with tflow python3
+dnf -y install cuda cuda-toolkit-9-0
+
+-- reinstall cuda-cudnn for python and tflow from 
+dnf install cuda-cudnn.x86_64 cuda-cudnn-devel.x86_64
+
 -- for posterity, here is my running system
 
-virt:~$ dnf erase \*cuda\*
+ dnf erase \*cuda\*
 Dependencies resolved.
 =================================================================================================
- Package                        Arch          Version                Repository             Size
+ Package                         Arch       Version                     Repository          Size
 =================================================================================================
 Removing:
- nvidia-driver-cuda             x86_64        2:387.34-1.fc27        @fedora-nvidia        865 k
- nvidia-driver-cuda-libs        x86_64        2:387.34-1.fc27        @fedora-nvidia         88 M
+ cuda                            x86_64     1:9.1.85-2.fc27             @fedora-nvidia      40 M
+ cuda-command-line-tools-9-0     x86_64     9.0.176-1                   @cuda               60 M
+ cuda-core-9-0                   x86_64     9.0.176-1                   @cuda               54 M
+ cuda-cublas-9-0                 x86_64     9.0.176-1                   @cuda               51 M
+ cuda-cublas-dev-9-0             x86_64     9.0.176-1                   @cuda              124 M
+ cuda-cudart-9-0                 x86_64     9.0.176-1                   @cuda              468 k
+ cuda-cudart-dev-9-0             x86_64     9.0.176-1                   @cuda              4.1 M
+ cuda-cudnn                      x86_64     1:7.0.5.15-1.fc27           @fedora-nvidia     269 M
+ cuda-cudnn-devel                x86_64     1:7.0.5.15-1.fc27           @fedora-nvidia     274 M
+ cuda-cufft-9-0                  x86_64     9.0.176-1                   @cuda              127 M
+ cuda-cufft-dev-9-0              x86_64     9.0.176-1                   @cuda              131 M
+ cuda-curand-9-0                 x86_64     9.0.176-1                   @cuda               56 M
+ cuda-curand-dev-9-0             x86_64     9.0.176-1                   @cuda              122 M
+ cuda-cusolver-9-0               x86_64     9.0.176-1                   @cuda               74 M
+ cuda-cusolver-dev-9-0           x86_64     9.0.176-1                   @cuda               34 M
+ cuda-cusparse-9-0               x86_64     9.0.176-1                   @cuda               53 M
+ cuda-cusparse-dev-9-0           x86_64     9.0.176-1                   @cuda              115 M
+ cuda-documentation-9-0          x86_64     9.0.176-1                   @cuda              203 M
+ cuda-driver-dev-9-0             x86_64     9.0.176-1                   @cuda               41 k
+ cuda-libraries-dev-9-0          x86_64     9.0.176-1                   @cuda                0  
+ cuda-libs                       x86_64     1:9.1.85-2.fc27             @fedora-nvidia      28 M
+ cuda-license-9-0                x86_64     9.0.176-1                   @cuda               80 k
+ cuda-misc-headers-9-0           x86_64     9.0.176-1                   @cuda               11 M
+ cuda-npp-9-0                    x86_64     9.0.176-1                   @cuda              136 M
+ cuda-npp-dev-9-0                x86_64     9.0.176-1                   @cuda              166 M
+ cuda-nvgraph-9-0                x86_64     9.0.176-1                   @cuda               22 M
+ cuda-nvgraph-dev-9-0            x86_64     9.0.176-1                   @cuda               52 M
+ cuda-nvml-dev-9-0               x86_64     9.0.176-1                   @cuda              331 k
+ cuda-nvrtc-9-0                  x86_64     9.0.176-1                   @cuda               25 M
+ cuda-nvrtc-dev-9-0              x86_64     9.0.176-1                   @cuda               25 k
+ cuda-repo-fedora25              x86_64     9.1.85-1                    @System            210  
+ cuda-samples-9-0                x86_64     9.0.176-1                   @cuda              209 M
+ cuda-toolkit-9-0                x86_64     9.0.176-1                   @cuda                0  
+ cuda-visual-tools-9-0           x86_64     9.0.176-1                   @cuda              418 M
+ nvidia-driver-cuda              x86_64     2:387.34-1.fc27             @fedora-nvidia     865 k
+ nvidia-driver-cuda-libs         x86_64     2:387.34-1.fc27             @fedora-nvidia      88 M
 Removing dependent packages:
- nvidia-persistenced            x86_64        2:387.34-1.fc27        @fedora-nvidia         68 k
+ libSM-devel                     x86_64     1.2.2-7.fc27                @fedora             19 k
+ libXdamage-devel                x86_64     1.1.4-11.fc27               @fedora            2.5 k
+ libXext-devel                   x86_64     1.3.3-7.fc27                @fedora             99 k
+ libXfixes-devel                 x86_64     5.0.3-4.fc27                @fedora            9.0 k
+ libXi-devel                     x86_64     1.7.9-4.fc27                @fedora            126 k
+ libXmu-devel                    x86_64     1.1.2-7.fc27                @fedora             66 k
+ libXt-devel                     x86_64     1.1.5-6.fc27                @fedora            1.6 M
+ libXxf86vm-devel                x86_64     1.1.4-6.fc27                @fedora             12 k
+ libglvnd-devel                  x86_64     1:1.0.0-1.fc27              @updates             0  
+ libxcb-devel                    x86_64     1.12-5.fc27                 @fedora            2.6 M
+ mesa-libGL-devel                x86_64     17.2.4-2.fc27               @updates           1.5 M
+ mesa-libGLU-devel               x86_64     9.0.0-13.fc27               @fedora             20 k
+ nvidia-persistenced             x86_64     2:387.34-1.fc27             @fedora-nvidia      68 k
 Removing unused dependencies:
- nvidia-driver-NVML             x86_64        2:387.34-1.fc27        @fedora-nvidia        1.3 M
+ freeglut-devel                  x86_64     3.0.0-6.fc27                @fedora            112 k
+ gcc-c++                         x86_64     7.2.1-2.fc27                @fedora             26 M
+ gl-manpages                     noarch     1.1-14.20161227.fc27        @fedora            1.0 M
+ libICE-devel                    x86_64     1.0.9-11.fc27               @fedora            262 k
+ libX11-devel                    x86_64     1.6.5-4.fc27                @fedora            1.0 M
+ libXau-devel                    x86_64     1.0.8-9.fc27                @fedora            6.4 k
+ libdrm-devel                    x86_64     2.4.89-1.fc27               @updates           491 k
+ libglvnd-core-devel             x86_64     1:1.0.0-1.fc27              @updates            40 k
+ nvidia-driver-NVML              x86_64     2:387.34-1.fc27             @fedora-nvidia     1.3 M
+ xorg-x11-proto-devel            noarch     7.7-23.fc27                 @fedora            1.4 M
 
 Transaction Summary
 =================================================================================================
-Remove  4 Packages
+Remove  59 Packages
 
-Freed space: 90 M
+Freed space: 2.9 G
 Is this ok [y/N]: Operation aborted.
-virt:~$ 
-virt:~$ 
+
 virt:~$ dnf erase \*nvidia\*
 Dependencies resolved.
 =================================================================================================
@@ -198,13 +260,14 @@ Removing:
  nvidia-driver-libs           x86_64 2:387.34-1.fc27             @fedora-nvidia             61 M
  nvidia-persistenced          x86_64 2:387.34-1.fc27             @fedora-nvidia             68 k
 Removing dependent packages:
- gcc                          x86_64 7.2.1-2.fc27                @fedora                    51 M
+ cuda                         x86_64 1:9.1.85-2.fc27             @fedora-nvidia             40 M
+ cuda-cudnn-devel             x86_64 1:7.0.5.15-1.fc27           @fedora-nvidia            274 M
+ cuda-libs                    x86_64 1:9.1.85-2.fc27             @fedora-nvidia             28 M
  redhat-rpm-config            noarch 67-2.fc27                   @updates                   98 k
  rpm-build                    x86_64 4.14.0-2.fc27               @fedora                   275 k
  rpmdevtools                  noarch 8.10-3.fc27                 @fedora                   200 k
 Removing unused dependencies:
  akmods                       noarch 0.5.6-10.fc27               @fedora                    31 k
- cpp                          x86_64 7.2.1-2.fc27                @fedora                    24 M
  dwz                          x86_64 0.12-5.fc27                 @fedora                   216 k
  egl-wayland                  x86_64 1.0.2-0.4.20170802git1f4b1fd.fc27
                                                                  @fedora                    45 k
@@ -216,9 +279,7 @@ Removing unused dependencies:
  ghc-srpm-macros              noarch 1.4.2-6.fc27                @fedora                   414  
  gnat-srpm-macros             noarch 4-4.fc27                    @fedora                   841  
  go-srpm-macros               noarch 2-10.fc27                   @fedora                   798  
- isl                          x86_64 0.16.1-3.fc27               @fedora                   2.9 M
  kmodtool                     noarch 1-25.fc27                   @fedora                    13 k
- libglvnd-opengl              x86_64 1:1.0.0-1.fc27              @updates                  189 k
  libva-vdpau-driver           x86_64 0.7.4-19.fc27               @fedora                   122 k
  ocaml-srpm-macros            noarch 5-2.fc27                    @fedora                   737  
  openblas-srpm-macros         noarch 2-2.fc27                    @fedora                   104  
@@ -234,11 +295,11 @@ Removing unused dependencies:
 
 Transaction Summary
 =================================================================================================
-Remove  42 Packages
+Remove  41 Packages
 
-Freed space: 289 M
-Is this ok [y/N]: Operation aborted.
 
+virt:$ cat /etc/ld.so.conf.d/cuda-9-0.conf 
+/usr/local/cuda-9.0/targets/x86_64-linux/lib
 ```
 
 `Note:` I keep all my rpm dependecies cached locally so i don't have to wait and use deltarpm, disk is cheap:
