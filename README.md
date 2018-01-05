@@ -441,6 +441,7 @@ We also need to enable GPU support (this changes from 1.7 alpha to Device Plugin
 
 ```
 https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/
+https://github.com/NVIDIA/k8s-device-plugin
 ```
 
 Run:
@@ -458,7 +459,26 @@ minikube status
 minikube dashboard
 ```
 
-Useful commands:
+Run the NVIDIA device plugin for kube
+
+```
+kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v1.8/nvidia-device-plugin.yml
+```
+
+You should see log output if OK
+
+```
+kubectl logs nvidia-device-plugin-daemonset-znz2m
+
+2018/01/05 02:25:23 Loading NVML
+2018/01/05 02:25:23 Fetching devices.
+2018/01/05 02:25:23 Starting FS watcher.
+2018/01/05 02:25:23 Starting OS watcher.
+2018/01/05 02:25:23 Starting to serve on /var/lib/kubelet/device-plugins/nvidia.sock
+2018/01/05 02:25:23 Registered device plugin with Kubelet
+```
+
+Some Useful commands:
 
 ```
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
@@ -600,3 +620,6 @@ You will note why we need more than one GPU ;) A limitation of kube currently:
 -- https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/
 -- Containers (and pods) do not share GPUs. There’s no overcommitting of GPUs.
 ```
+
+#### Training a model and serving it up using
+
