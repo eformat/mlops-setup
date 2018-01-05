@@ -10,7 +10,7 @@ https://blog.openshift.com/machine-learning-openshift-kubernetes/
 
 #### Laptop Specs
 
-Hardware
+##### Hardware
 
 ```
 Dell XPS 15
@@ -20,9 +20,9 @@ Built-in Video Card: 00:02.0 VGA compatible controller: Intel Corporation Device
 GPU: 01:00.0 3D controller: NVIDIA Corporation GP107M [GeForce GTX 1050 Mobile] (rev a1)
 ```
 
-OS
+##### OS
 
-UEFI dual boot (Windows 10 / Fedora Core 27)
+UEFI dual boot (Windows 10 / Fedora Core 27), running FC27
 
 ```
 Linux virt 4.14.8-300.fc27.x86_64 #1 SMP Wed Dec 20 19:00:18 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
@@ -60,16 +60,16 @@ To make changes permanent for grub2 and UEFI:
 grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
 ```
 
-I'm using Weyland quite happily (X also works - sometimes needed for applications not Weyland HIDPI friendly)
+I'm using Wayland quite happily (X also works - sometimes needed for applications not Wayland HIDPI friendly)
 
 ```
 loginctl show-session 2 -p Type
 Type=wayland
 ```
 
-### Weyland / X11 tricks
+### Wayland / X11 tricks
 
-The joys of a 4K screen is that not all software works ok with it properly, nor with Weyland. Some workarounds i use.
+The joys of a 4K screen is that not all software works ok with it properly, nor with Wayland. Some workarounds i use.
 
 I use this for `intellij`
 
