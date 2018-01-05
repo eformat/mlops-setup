@@ -33,7 +33,7 @@ Fedora release 27 (Twenty Seven)
 
 Using the built-in video card with FC27. The Nvidia graphics card being used for MLOPS.
 
-The trick to making this work OOTB is to set UEFI acpi up in grub to look like 'windows 2009', then 4k display and external.
+The trick to making this work OOTB is to set UEFI acpi up in grub to look like 'windows 2009', then 4k display and external work fine.
 
 The `pci=noaer` gets rid of AE errors spamming dmesg all the time.
 
