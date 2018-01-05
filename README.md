@@ -31,9 +31,9 @@ Fedora release 27 (Twenty Seven)
 
 #### Graphics setup and GRUB
 
-Using the built-in video card with FC27. The Nvidia graphics card being used for MLOPS.
+Using the built-in intel video card with FC27. The Nvidia graphics card being used for MLOPS only (not using for graphics, one day perhaps ...)
 
-The trick to making this work OOTB is to set UEFI acpi up in grub to look like 'windows 2009', then 4k display and external work fine.
+The trick to making the intel card work OOTB is to set UEFI acpi up in grub to look like 'windows 2009', then 4k display and external work fine.
 
 The `pci=noaer` gets rid of AE errors spamming dmesg all the time.
 
@@ -106,12 +106,16 @@ You can use `NVIDIA` rpms:
 https://developer.download.nvidia.com/compute/cuda/9.0/Prod/docs/sidebar/CUDA_Quick_Start_Guide.pdf
 ```
 
-OR
+and/or
 
 RPMS from `negativo17.org`
 
 ```
 https://negativo17.org/nvidia-driver/
+dnf config-manager --add-repo=https://negativo17.org/repos/fedora-nvidia.repo
+dnf install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+
+dnf install cuda-cudnn.x86_64 cuda-cudnn-devel.x86_64 nvidia-driver-cuda-libs.x86_64 nvidia-driver-libs nvidia-driver kernel-devel dkms-nvidia
 ```
 
 There is also Fedora Wiki help here if you get stuck:
@@ -127,16 +131,117 @@ Using the NVIDIA driver i installed the 9-0 cuda runtime and toolkit (the latest
 -- https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Fedora&target_version=25&target_type=rpmnetwork
 rpm -i ~cuda-repo-fedora25-9.1.85-1.x86_64.rpm
 
-dnf -y install cuda-9.0 cuda-toolkit-9-0
+dnf -y install cuda cuda-toolkit-9-0
 
 ```
 
-The `negativo17.org` also provides similar content:
+I found the following to be reproducible (this can be frought with dependecy version hell and is likley not perfect):
 
 ```
+-- enable both the repos above
+
+-- NVIDIA CUDA
+-- https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Fedora&target_version=25&target_type=rpmnetwork
+rpm -i ~cuda-repo-fedora25-9.1.85-1.x86_64.rpm
+
+-- negativo and rpmfusion free
 dnf config-manager --add-repo=https://negativo17.org/repos/fedora-nvidia.repo
-dnf install cuda-cudnn.x86_64 cuda-cudnn-devel.x86_64 nvidia-driver-cuda-libs.x86_64 nvidia-driver-libs nvidia-driver kernel-devel dkms-nvidia
+dnf install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+
+-- uninstall all cuda and nvidia drivers and reboot to get clean kernel
+dnf erase \*cuda\* \*nvidia\*
+reboot
+
+-- type the following which will install dependent libraries from both repos
+nvidia-smi
+
+-- for posterity, here is my running system
+
+virt:~$ dnf erase \*cuda\*
+Dependencies resolved.
+=================================================================================================
+ Package                        Arch          Version                Repository             Size
+=================================================================================================
+Removing:
+ nvidia-driver-cuda             x86_64        2:387.34-1.fc27        @fedora-nvidia        865 k
+ nvidia-driver-cuda-libs        x86_64        2:387.34-1.fc27        @fedora-nvidia         88 M
+Removing dependent packages:
+ nvidia-persistenced            x86_64        2:387.34-1.fc27        @fedora-nvidia         68 k
+Removing unused dependencies:
+ nvidia-driver-NVML             x86_64        2:387.34-1.fc27        @fedora-nvidia        1.3 M
+
+Transaction Summary
+=================================================================================================
+Remove  4 Packages
+
+Freed space: 90 M
+Is this ok [y/N]: Operation aborted.
+virt:~$ 
+virt:~$ 
+virt:~$ dnf erase \*nvidia\*
+Dependencies resolved.
+=================================================================================================
+ Package                      Arch   Version                     Repository                 Size
+=================================================================================================
+Removing:
+ akmod-nvidia                 x86_64 2:387.34-1.fc27             @fedora-nvidia             15 M
+ kmod-nvidia-4.14.8-300.fc27.x86_64
+                              x86_64 2:387.34-1.fc27             @@commandline             7.3 M
+ libnvidia-container-tools    x86_64 1.0.0-0.1.alpha.2           @libnvidia-container       31 k
+ libnvidia-container1         x86_64 1.0.0-0.1.alpha.2           @libnvidia-container      141 k
+ nvidia-container-runtime     x86_64 1.1.1-1.docker17.12.0       @nvidia-container-runtime  12 M
+ nvidia-docker2               noarch 2.0.2-1.docker17.12.0.ce    @nvidia-docker            2.3 k
+ nvidia-driver                x86_64 2:387.34-1.fc27             @fedora-nvidia             23 M
+ nvidia-driver-NVML           x86_64 2:387.34-1.fc27             @fedora-nvidia            1.3 M
+ nvidia-driver-cuda           x86_64 2:387.34-1.fc27             @fedora-nvidia            865 k
+ nvidia-driver-cuda-libs      x86_64 2:387.34-1.fc27             @fedora-nvidia             88 M
+ nvidia-driver-libs           x86_64 2:387.34-1.fc27             @fedora-nvidia             61 M
+ nvidia-persistenced          x86_64 2:387.34-1.fc27             @fedora-nvidia             68 k
+Removing dependent packages:
+ gcc                          x86_64 7.2.1-2.fc27                @fedora                    51 M
+ redhat-rpm-config            noarch 67-2.fc27                   @updates                   98 k
+ rpm-build                    x86_64 4.14.0-2.fc27               @fedora                   275 k
+ rpmdevtools                  noarch 8.10-3.fc27                 @fedora                   200 k
+Removing unused dependencies:
+ akmods                       noarch 0.5.6-10.fc27               @fedora                    31 k
+ cpp                          x86_64 7.2.1-2.fc27                @fedora                    24 M
+ dwz                          x86_64 0.12-5.fc27                 @fedora                   216 k
+ egl-wayland                  x86_64 1.0.2-0.4.20170802git1f4b1fd.fc27
+                                                                 @fedora                    45 k
+ elfutils-libelf-devel        x86_64 0.170-1.fc27                @fedora                    32 k
+ fakeroot                     x86_64 1.22-1.fc27                 @fedora                   188 k
+ fakeroot-libs                x86_64 1.22-1.fc27                 @fedora                   107 k
+ fedora-rpm-macros            noarch 26-3.fc27                   @fedora                    79  
+ fpc-srpm-macros              noarch 1.1-3.fc27                  @fedora                   134  
+ ghc-srpm-macros              noarch 1.4.2-6.fc27                @fedora                   414  
+ gnat-srpm-macros             noarch 4-4.fc27                    @fedora                   841  
+ go-srpm-macros               noarch 2-10.fc27                   @fedora                   798  
+ isl                          x86_64 0.16.1-3.fc27               @fedora                   2.9 M
+ kmodtool                     noarch 1-25.fc27                   @fedora                    13 k
+ libglvnd-opengl              x86_64 1:1.0.0-1.fc27              @updates                  189 k
+ libva-vdpau-driver           x86_64 0.7.4-19.fc27               @fedora                   122 k
+ ocaml-srpm-macros            noarch 5-2.fc27                    @fedora                   737  
+ openblas-srpm-macros         noarch 2-2.fc27                    @fedora                   104  
+ perl-srpm-macros             noarch 1-24.fc27                   @fedora                   794  
+ python-srpm-macros           noarch 3-23.fc27                   @updates                  2.2 k
+ qt5-srpm-macros              noarch 5.9.1-2.fc27                @fedora                   492  
+ rust-srpm-macros             noarch 4-3.fc27                    @fedora                   1.1 k
+ vulkan-filesystem            noarch 1.0.61.1-1.fc27             @fedora                     0  
+ xemacs-filesystem            noarch 21.5.34-25.20170628hg97140cfdeca7.fc27
+                                                                 @fedora                     0  
+ zlib-devel                   x86_64 1.2.11-4.fc27               @fedora                   143 k
+ zstd                         x86_64 1.3.3-1.fc27                @updates                  1.1 M
+
+Transaction Summary
+=================================================================================================
+Remove  42 Packages
+
+Freed space: 289 M
+Is this ok [y/N]: Operation aborted.
+
+
 ```
+
 
 ### Docker and NVIDIA Docker
 
